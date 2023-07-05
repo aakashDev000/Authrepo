@@ -1,9 +1,13 @@
-import "./App.css";
+// import "./App.css";
+// import Signup from "./components/auth/Signup";
+import Signin from "./components/auth/Signin";
+import Signup from "./components/auth/Signup";
+import Home from "./components/home/Home";
 
 function App() {
   return (
     <div className="App">
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
+      <Signup />
     </div>
   );
 }

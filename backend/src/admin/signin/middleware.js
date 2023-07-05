@@ -1,11 +1,11 @@
-const bcrypt = require('bcrypt');
-const { v4: uuidv4 } = require('uuid');
-const { getMongodb } = require('../../../mongodb');
+const bcrypt = require("bcrypt");
+const { v4: uuidv4 } = require("uuid");
+const { getMongodb } = require("../../../mongodb");
 
 const getRequestData = (req, res, next) => {
-  console.log('req body', req.body);
+  console.log("req body", req.body);
 
-  if (req.method === 'POST') {
+  if (req.method === "POST") {
     const { data } = req.body;
     res.locals.reqdata = data;
   }
@@ -15,7 +15,7 @@ const getRequestData = (req, res, next) => {
 };
 
 const checkUserIsExistAndVerifyPassword = async (req, res, next) => {
-  console.log('req data', res.locals.reqdata);
+  console.log("req data", res.locals.reqdata);
 
   const { password, email } = res.locals.reqdata;
   let data;
@@ -23,12 +23,12 @@ const checkUserIsExistAndVerifyPassword = async (req, res, next) => {
   try {
     const mongoDB = await getMongodb();
 
-    data = await mongoDB.collection('AdminLogin').findOne(
+    data = await mongoDB.collection("AdminLogin").findOne(
       { email },
       {
         projection: {
           _id: 0,
-          hashedpassword: '$password',
+          hashedpassword: "$password",
           accountid: 1,
           adminid: 1,
           isadmin: 1,
@@ -36,13 +36,13 @@ const checkUserIsExistAndVerifyPassword = async (req, res, next) => {
       }
     );
   } catch (error) {
-    console.log('error in mongodb', error);
-    res.status(400).send({ status: 400, message: 'Database error occured' });
+    console.log("error in mongodb", error);
+    res.status(400).send({ status: 400, message: "Database error occured" });
     return;
   }
 
   if (!data) {
-    res.status(400).send({ status: 400, message: 'Admin Account not found' });
+    res.status(400).send({ status: 400, message: "Admin Account not found" });
   }
 
   const { hashedpassword, accountid, adminid, isadmin } = data;
@@ -50,7 +50,8 @@ const checkUserIsExistAndVerifyPassword = async (req, res, next) => {
   const isMatch = await bcrypt.compare(password, hashedpassword);
 
   if (!isMatch) {
-    res.status(400).send({ status: 400, message: 'Password not match' });
+    res.status(400).send({ status: 400, message: "Password not match" });
+    return;
   }
 
   res.locals.tempdata = { ...res.locals.tempdata, accountid, adminid, isadmin };
