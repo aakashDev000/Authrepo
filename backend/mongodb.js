@@ -8,7 +8,6 @@ exports.getMongodb = () => {
   return new Promise((resolve, reject) => {
     MongoClient.connect(connectionURL)
       .then((client) => {
-        // mongodb = client.db(databaseName);
         mongodb = client.db();
         console.log("Database Connected");
         resolve(mongodb);
