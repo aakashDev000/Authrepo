@@ -1,11 +1,13 @@
-const express = require("express");
-const adminSignupRouter = require('./signup/router')
-const router = express.Router()
+const express = require('express');
+const adminSignupRouter = require('./signup/router');
+const adminSigninRouter = require('./signin/router');
 
-router.post('/signup', adminSignupRouter)
+const router = express.Router();
+
+router.post('/signup', adminSignupRouter);
+
+router.post('/signin', adminSigninRouter);
 
 // router.use('/auth/user', userRouter)
 
-module.exports = router
-
-
+module.exports = router;
