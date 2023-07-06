@@ -1,6 +1,6 @@
 const { MongoClient } = require("mongodb");
 
-const connectionURL = "mongodb://127.0.0.1/skybase";
+const connectionURL = "mongodb://127.0.0.1/localdev";
 
 let mongodb;
 

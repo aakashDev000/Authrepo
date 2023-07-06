@@ -27,6 +27,7 @@ const Signup = () => {
     } else {
       signuprequest({ data: adminDetails })
         .then((res) => {
+          toast.success("Signup Successfully");
           goto("/signin");
         })
         .catch((err) => {

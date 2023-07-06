@@ -1,13 +1,20 @@
-// import "./App.css";
-// import Signup from "./components/auth/Signup";
+import { useEffect, useState } from "react";
 import Signin from "./components/auth/Signin";
-import Signup from "./components/auth/Signup";
 import Home from "./components/home/Home";
 
 function App() {
+  const authtoken = localStorage.getItem("authtoken");
+
+  const [token, setToken] = useState("");
+
+  useEffect(() => {
+    setToken(authtoken);
+  }, [authtoken]);
+
   return (
     <div className="App">
-      <Signup />
+      {!token && <Signin />}
+      {token && <Home />}
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { signinrequest } from "../service/action";
 
+
 const Signin = () => {
   const [adminDetails, setAdminDetails] = useState({
     email: "",
@@ -26,14 +27,18 @@ const Signin = () => {
     }
     if (email && !password) {
       toast.error("Please fill the password");
-    } else {
+    }
+
+    if (email && password) {
       signinrequest({ data: adminDetails })
         .then((res) => {
           goto("/home");
         })
         .catch((err) => {
           console.log("err", err);
-          toast.error(err.data.data);
+          const { data = {} } = err;
+          const { data: message = "Error occured" } = data;
+          if (message) toast.error(message);
         });
     }
   };

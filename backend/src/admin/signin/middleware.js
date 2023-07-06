@@ -27,12 +27,10 @@ const checkUserIsExistAndVerifyPassword = async (req, res, next) => {
     res.status(400).send({ status: 400, data: "Please Enter Your Password" });
   }
 
-  let data;
-
   try {
     const mongoDB = await getMongodb();
 
-    data = await mongoDB.collection("AdminLogin").findOne(
+    const data = await mongoDB.collection("AdminLogin").findOne(
       { email },
       {
         projection: {
@@ -44,44 +42,50 @@ const checkUserIsExistAndVerifyPassword = async (req, res, next) => {
         },
       }
     );
+
+    if (!data) {
+      res.status(400).send({ status: 400, data: "Account not found" });
+      return;
+    }
+
+    const { hashedpassword, accountid, adminid, isadmin } = data;
+
+    const isMatch = await bcrypt.compare(password, hashedpassword);
+
+    if (!isMatch) {
+      res.status(400).send({ status: 400, data: "Password not match" });
+      return;
+    }
+
+    res.locals.tempdata = {
+      ...res.locals.tempdata,
+      accountid,
+      adminid,
+      isadmin,
+    };
+
+    next();
+    return;
   } catch (error) {
     console.log("error in mongodb", error);
     res.status(400).send({ status: 400, data: "Database error occured" });
     return;
   }
-
-  if (!data) {
-    res.status(400).send({ status: 400, message: "Admin Account not found" });
-  }
-
-  const { hashedpassword, accountid, adminid, isadmin } = data;
-
-  const isMatch = await bcrypt.compare(password, hashedpassword);
-
-  if (!isMatch) {
-    res.status(400).send({ status: 400, data: "Password not match" });
-    return;
-  }
-
-  res.locals.tempdata = { ...res.locals.tempdata, accountid, adminid, isadmin };
-
-  next();
-  return;
 };
 
 const createToken = async (req, res, next) => {
   const authtoken = uuidv4() + uuidv4();
-  const { accountid, isadmin } = res.locals.tempdata;
+  const { adminid, isadmin } = res.locals.tempdata;
   const { email } = res.locals.reqdata;
 
   try {
-    const expirydate = new Date().setDate(new Date().getDate() + 1);
+    const expirydate = new Date(new Date().setDate(new Date().getDate() + 1));
     const mongoDB = await getMongodb();
 
     await mongoDB.collection("AuthToken").insertOne({
       authtoken,
-      accountid,
       isadmin,
+      adminid,
       email,
       expirydate,
       cretedat: new Date(),
