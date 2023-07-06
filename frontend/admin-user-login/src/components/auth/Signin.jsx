@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { signinrequest } from "../service/action";
-
 
 const Signin = () => {
   const [adminDetails, setAdminDetails] = useState({
@@ -20,13 +19,21 @@ const Signin = () => {
 
   const goto = useNavigate();
 
+  const token = localStorage.getItem("authtoken");
+
+  useEffect(() => {
+    if (token) {
+      goto("/home");
+    }
+  }, [goto, token]);
+
   const signin = () => {
     const { email, password } = adminDetails;
     if (!email) {
-      toast.error("Please fill the email");
+      toast.error("Please Enter the email");
     }
     if (email && !password) {
-      toast.error("Please fill the password");
+      toast.error("Please Enter the password");
     }
 
     if (email && password) {

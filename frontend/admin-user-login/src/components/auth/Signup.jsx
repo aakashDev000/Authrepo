@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { signuprequest } from "../service/action";
 import { ToastContainer, toast } from "react-toastify";
@@ -19,6 +19,14 @@ const Signup = () => {
   };
 
   const goto = useNavigate();
+
+  const token = localStorage.getItem("authtoken");
+
+  useEffect(() => {
+    if (token) {
+      goto("/home");
+    }
+  }, [goto, token]);
 
   const signup = () => {
     const { email, password, username } = adminDetails;
