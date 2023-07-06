@@ -1,15 +1,17 @@
-const express = require('express');
+const express = require("express");
 const {
   getRequestData,
   checkUserIsExistAndVerifyPassword,
   responseForAdminSignin,
-} = require('./middleware');
+  createToken,
+} = require("./middleware");
 
 const router = express.Router();
 
 router.use(
   getRequestData,
   checkUserIsExistAndVerifyPassword,
+  createToken,
   responseForAdminSignin
 );
 

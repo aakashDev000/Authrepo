@@ -18,6 +18,15 @@ const checkUserIsExistAndVerifyPassword = async (req, res, next) => {
   console.log("req data", res.locals.reqdata);
 
   const { password, email } = res.locals.reqdata;
+
+  if (!email) {
+    res.status(400).send({ status: 400, data: "Please Enter Your email" });
+  }
+
+  if (!password) {
+    res.status(400).send({ status: 400, data: "Please Enter Your Password" });
+  }
+
   let data;
 
   try {
@@ -37,7 +46,7 @@ const checkUserIsExistAndVerifyPassword = async (req, res, next) => {
     );
   } catch (error) {
     console.log("error in mongodb", error);
-    res.status(400).send({ status: 400, message: "Database error occured" });
+    res.status(400).send({ status: 400, data: "Database error occured" });
     return;
   }
 
@@ -50,7 +59,7 @@ const checkUserIsExistAndVerifyPassword = async (req, res, next) => {
   const isMatch = await bcrypt.compare(password, hashedpassword);
 
   if (!isMatch) {
-    res.status(400).send({ status: 400, message: "Password not match" });
+    res.status(400).send({ status: 400, data: "Password not match" });
     return;
   }
 
@@ -60,10 +69,41 @@ const checkUserIsExistAndVerifyPassword = async (req, res, next) => {
   return;
 };
 
-const responseForAdminSignin = async (req, res, next) => {
-  const { accountid, adminid, isadmin } = res.locals.tempdata;
+const createToken = async (req, res, next) => {
+  const authtoken = uuidv4() + uuidv4();
+  const { accountid, isadmin } = res.locals.tempdata;
+  const { email } = res.locals.reqdata;
 
-  res.status(200).send({ status: 200, data: { accountid, adminid, isadmin } });
+  try {
+    const expirydate = new Date().setDate(new Date().getDate() + 1);
+    const mongoDB = await getMongodb();
+
+    await mongoDB.collection("AuthToken").insertOne({
+      authtoken,
+      accountid,
+      isadmin,
+      email,
+      expirydate,
+      cretedat: new Date(),
+    });
+
+    res.locals.tempdata = { ...res.locals.tempdata, authtoken };
+
+    next();
+    return;
+  } catch (error) {
+    console.log("error in mongodb", error);
+    res.status(400).send({ status: 400, data: "Database error occured" });
+    return;
+  }
+};
+
+const responseForAdminSignin = async (req, res, next) => {
+  const { accountid, isadmin, authtoken } = res.locals.tempdata;
+
+  res
+    .status(200)
+    .send({ status: 200, data: { accountid, isadmin, authtoken } });
   return;
 };
 
@@ -71,4 +111,5 @@ module.exports = {
   getRequestData,
   checkUserIsExistAndVerifyPassword,
   responseForAdminSignin,
+  createToken,
 };

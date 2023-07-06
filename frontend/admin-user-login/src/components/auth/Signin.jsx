@@ -26,14 +26,16 @@ const Signin = () => {
     }
     if (email && !password) {
       toast.error("Please fill the password");
+    } else {
+      signinrequest({ data: adminDetails })
+        .then((res) => {
+          goto("/home");
+        })
+        .catch((err) => {
+          console.log("err", err);
+          toast.error(err.data.data);
+        });
     }
-    signinrequest({ data: adminDetails })
-      .then((res) => {
-        goto("/home");
-      })
-      .catch((err) => {
-        console.log("err", err);
-      });
   };
   return (
     <div className="relative flex flex-col justify-center min-h-screen overflow-hidden">
