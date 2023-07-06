@@ -73,7 +73,9 @@ const storeAdminSignupData = async (req, res, next) => {
   const { hasedPassword } = res.locals.tempdata;
 
   try {
-    const accountid = generateString(12);
+    const getaccountid = generateString(12);
+
+    const accountid = getaccountid.trim(" ");
 
     const adminid = uuidv4();
 

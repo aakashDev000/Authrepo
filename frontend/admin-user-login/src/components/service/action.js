@@ -117,3 +117,40 @@ export const getUserPaginationData = () => {
       });
   });
 };
+
+export const userSignup = ({ data }) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post("http://localhost:5000/api/v1/user/signup", {
+        data,
+      })
+      .then((res) => {
+        console.log("res****", res);
+        resolve(res);
+      })
+      .catch((err) => {
+        console.log("err*********", err);
+        reject(err.response);
+      });
+  });
+};
+
+export const usersigninrequest = ({ data }) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post("http://localhost:5000/api/v1/user/signin", { data })
+      .then((res) => {
+        if (res.status === 200) {
+          if (res && res.data && res.data.data) {
+            const { authtoken = "" } = res.data.data;
+            if (authtoken) localStorage.setItem("authtoken", authtoken);
+          }
+          resolve(res);
+        }
+      })
+      .catch((err) => {
+        console.log("err*********", err);
+        reject(err.response);
+      });
+  });
+};

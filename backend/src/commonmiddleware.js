@@ -82,6 +82,11 @@ exports.getRequestData = (req, res, next) => {
     res.locals.reqdata = data;
   }
 
+  if (req.method === "GET") {
+    const query = req.query;
+    res.locals.reqdata = query;
+  }
+
   next();
   return;
 };

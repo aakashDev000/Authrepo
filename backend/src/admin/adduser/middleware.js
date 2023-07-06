@@ -3,10 +3,20 @@ const { v4: uuidv4 } = require("uuid");
 
 exports.checkExistingUser = async (req, res, next) => {
   const { username, email } = res.locals.reqdata;
-  const { adminid } = res.locals.tempdata.accoundata;
+  const { adminid, isadmin } = res.locals.tempdata.accoundata;
 
   if (!username || !email) {
     res.status(400).send({ status: 400, data: "please fill the all details" });
+    return;
+  }
+
+  if (!isadmin) {
+    res
+      .status(400)
+      .send({
+        status: 400,
+        data: "admin can only add users, You Dont't have permission",
+      });
     return;
   }
 
