@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const authRouter = require("./src/authrouter");
+const userRouter = require("./src/user/userrouter");
 
 const router = express.Router();
 
@@ -16,4 +17,4 @@ app.listen(port, () => {
   console.log(`server started port ${port}`);
 });
 
-router.use("/api/v1", authRouter);
+router.use("/api/v1", authRouter, userRouter);

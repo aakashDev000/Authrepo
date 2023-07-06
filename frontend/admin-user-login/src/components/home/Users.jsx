@@ -4,7 +4,7 @@ import { getUserPaginationData } from "../service/action";
 import UserList from "./UserList";
 import LoadingDialog from "./LoadingDialog";
 
-const Users = () => {
+const Users = ({ docdata }) => {
   const [dialogState, setDialogState] = useState(false);
 
   const closeDialog = () => {
@@ -49,15 +49,17 @@ const Users = () => {
   return (
     <>
       {loading && <LoadingDialog />}
-      <div className="flex justify-center pt-3 ">
-        <button
-          type="button"
-          className="flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-          onClick={openDialog}
-        >
-          Add User
-        </button>
-      </div>
+      {docdata && docdata.isadmin && (
+        <div className="flex justify-center pt-3 ">
+          <button
+            type="button"
+            className="flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+            onClick={openDialog}
+          >
+            Add User
+          </button>
+        </div>
+      )}
 
       {dialogState && (
         <ContentDialog
