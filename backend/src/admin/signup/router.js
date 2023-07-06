@@ -1,8 +1,18 @@
 const express = require("express");
-const {getRequestData, hashPassword, storeAdminSignupData} = require('./middleware')
+const {
+  getRequestData,
+  hashPassword,
+  storeAdminSignupData,
+  checkExistingUser,
+} = require("./middleware");
 
-const router = express.Router()
+const router = express.Router();
 
-router.use( getRequestData, hashPassword, storeAdminSignupData)
+router.use(
+  getRequestData,
+  checkExistingUser,
+  hashPassword,
+  storeAdminSignupData
+);
 
-module.exports = router
+module.exports = router;

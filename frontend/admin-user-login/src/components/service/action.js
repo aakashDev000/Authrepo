@@ -11,8 +11,8 @@ export const signuprequest = ({ data }) => {
         }
       })
       .catch((err) => {
-        console.log("err*********", err);
-        reject(err);
+        console.log("err*********", err.response);
+        reject(err.response);
       });
   });
 };
@@ -29,7 +29,7 @@ export const signinrequest = ({ data }) => {
       })
       .catch((err) => {
         console.log("err*********", err);
-        reject(err);
+        reject(err.response);
       });
   });
 };
