@@ -1,3 +1,6 @@
+const dotenv = require("dotenv");
+
+dotenv.config();
 const { MongoClient } = require("mongodb");
 
 const connectionURL = "mongodb://127.0.0.1/localdev";

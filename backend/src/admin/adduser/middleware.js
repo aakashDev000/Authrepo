@@ -46,6 +46,7 @@ exports.adduserAgainstAdmin = async (req, res, next) => {
       userid: uuidv4(),
       username,
       email,
+      signedup: false,
       createdat: new Date(),
     });
 
