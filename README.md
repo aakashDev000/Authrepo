@@ -1,4 +1,4 @@
-# viswatechtask
+# tech
 
 ## Install Packages
 
